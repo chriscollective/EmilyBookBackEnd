@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!--google font-->
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+    <!-- JavaScript Link -->
+    <script
+      type="text/javascript"
+      src="Scripts/TopBottomBar/TopBar_JS.js"
+    ></script>
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638968245071821164"
+      type="text/javascript"
+    ></script>
+
+    <script type="text/javascript">
+      const USE_MOCK_DATA = true; /**是否使用假資料模式*/
+
+      function GetData() {
+        if (USE_MOCK_DATA) {
+          // 假資料模式
+          var rw = {
+            AboutEmilyName: "Emily Books Agency",
+            AboutEmilyDescription: `
+        <p>EMILY CHUANG is the founder of <b>EMILY BOOKS AGENCY</b> and <b>EMILY PUBLISHING COMPANY</b>.</p>
+
+        <p>She worked with international authors and published their collections such as Milan Kundera, J.M. Le Clézio, Umberto Eco, J.K. Rowling, Patrick Modiano, Patrick Süskind, Arnaldur Indriðason, Yann Martel, Bernhard Schlink, and Dai Sijie when she was the Deputy Editor in Chief at Crown Culture Corporation.</p>
+
+        <p>She was responsible for the “Soji Shimada Mystery Award” in 2009/2011 and invited publishers in Japan, China, Thailand, Malaysia, and Italy to publish the first prize books.</p>
+
+        <p>EMILY PUBLISHING successfully created some international bestsellers in Taiwan, such as <i>I am Malala</i>, <i>A Girl with Seven Names</i>, <i>The Rosie Project</i>, <i>La Vérité sur l’Affaire Harry Quebert</i>, <i>Anne Frank: The Graphic Diary</i>, and <i>Persepolis</i>.</p>
+
+        <p>She was invited to international book fairs and writer festivals such as Jerusalem, Guadalajara, Budapest, Sydney, Auckland, Paris, and Toronto.</p>
+
+        <p><b>Emily Publishing Company, Ltd.</b>, a book publisher representing Taiwan at the 2018 Gourmand World Cookbook Awards, won first prize in the translation category for its Chinese edition of the cookbook <i>Jerusalem</i>.</p>
+
+        <p><b>EMILY BOOKS AGENCY</b> is a Taiwan-based company founded in 2023. The agency mainly represents Asian books including fiction, non-fiction, graphic novels, and children’s picture books abroad.</p>
+      `,
+
+            AboutEmilyProfileImage: "./image/aboutEmily.jpg",
+          };
+
+          $(".fields").each(function () {
+            $(this).html(rw[this.id]);
+          });
+          $(".imgfields").each(function () {
+            $(this).attr("src", rw[this.id]);
+          });
+        } else {
+          // 真實資料模式
+          $.post(
+            "/AboutEmily/EmilyInfoLib.aspx",
+            { Proc: "GetAboutEmilyData", UID: "1" },
+            function (data) {
+              var tb = $.parseJSON(data);
+              if (tb.length > 0) {
+                var rw = tb[0];
+                $(".fields").each(function () {
+                  $(this).text(rw[this.id]);
+                });
+                $(".imgfields").each(function () {
+                  $(this).attr("src", rw[this.id]);
+                });
+              }
+            }
+          );
+        }
+      }
+
+      $(document).ready(function () {
+        GetData();
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="AboutEmilyAgencyTitle fields TitleofThisPage"
+      id="AboutEmilyName"
+    ></div>
+    <div class="row">
+      <div class="col-50">
+        <div class="row">
+          <div class="col-40">
+            <div class="ImgDivCss">
+              <img
+                id="AboutEmilyProfileImage"
+                class="EmilyBookImageCss imgfields"
+                alt="Cover image"
+              />
+            </div>
+          </div>
+          <div class="col-60">
+            <div
+              class="AboutEmilyDescriptionCss fields"
+              id="AboutEmilyDescription"
+            ></div>
+          </div>
+          <div class="eidtBtnContainer">
+            <a class="CreateNewA editInfo" href="./AboutEmilyCreate.html"
+              >Edit Info</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

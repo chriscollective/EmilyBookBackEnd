@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638969333249704447"
+      type="text/javascript"
+    ></script>
+
+    <script
+      src="https://cdn.tiny.cloud/1/nco3yvd11i1byyx7mvhvcyqlrktst3i2r7o7qbjg4g8vaujm/tinymce/6/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+
+    <script src="/Scripts/ajaxfileupload.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      // ----------------------------------------
+      // 🧩 模式設定：true = 假資料模式；false = 正常模式
+      // ----------------------------------------
+      var isMockMode = true;
+
+      // 取得 URL 參數
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      var AID = getQueryParam("AID") || "0";
+
+      // ----------------------------------------
+      // 🧱 假資料庫
+      // ----------------------------------------
+      var mockAuthors = [
+        {
+          AID: "1",
+          AuthorFirstName: "Haruki",
+          AuthorLastName: "Murakami",
+          AuthorOriginalLanguageName: "村上春樹",
+          AuthorRegionCountry: "Japan",
+          AuthorDescription:
+            "<p>日本小說家，代表作《挪威的森林》、《1Q84》。</p>",
+          AuthorPhoto: "./image/mock_author1.jpg",
+          Create_Who2: "Editor01",
+          Craete_When2: "2024/10/12",
+        },
+        {
+          AID: "2",
+          AuthorFirstName: "Alice",
+          AuthorLastName: "Walker",
+          AuthorOriginalLanguageName: "アリス・ウォーカー",
+          AuthorRegionCountry: "United States",
+          AuthorDescription: "<p>美國小說家，代表作《紫色姊妹花》。</p>",
+          AuthorPhoto: "./image/mock_author2.jpg",
+          Create_Who2: "Admin",
+          Craete_When2: "2024/09/01",
+        },
+        {
+          AID: "3",
+          AuthorFirstName: "Kim",
+          AuthorLastName: "Young-ha",
+          AuthorOriginalLanguageName: "김연하",
+          AuthorRegionCountry: "South Korea",
+          AuthorDescription: "<p>韓國當代小說家，風格多變。</p>",
+          AuthorPhoto: "./image/mock_author3.jpg",
+          Create_Who2: "Editor02",
+          Craete_When2: "2024/11/05",
+        },
+        {
+          AID: "4",
+          AuthorFirstName: "Françoise",
+          AuthorLastName: "Sagan",
+          AuthorOriginalLanguageName: "フランソワーズ・サガン",
+          AuthorRegionCountry: "France",
+          AuthorDescription:
+            "<p>法國小說家，代表作《你好，憂愁》（Bonjour Tristesse）。</p>",
+          AuthorPhoto: "./image/mock_author4.jpg",
+          Create_Who2: "Staff",
+          Craete_When2: "2024/08/28",
+        },
+        {
+          AID: "5",
+          AuthorFirstName: "Li",
+          AuthorLastName: "Bai",
+          AuthorOriginalLanguageName: "李白",
+          AuthorRegionCountry: "China",
+          AuthorDescription:
+            "<p>唐代詩人，字太白，代表作《將進酒》、《早發白帝城》等。</p>",
+          AuthorPhoto: "./image/mock_author5.jpg",
+          Create_Who2: "System",
+          Craete_When2: "2024/07/15",
+        },
+      ];
+
+      // ----------------------------------------
+      // 🧽 清空表單（for 新增作者）
+      // ----------------------------------------
+      function clearForm() {
+        $(".fields").val("");
+        $(".htmlfields").each(function () {
+          const editor = tinymce.get(this.id);
+          if (editor) editor.setContent("");
+        });
+      }
+
+      /*預載圖片*/
+      function preloadImage(url, imgElement) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            imgElement.src = url;
+            resolve();
+          };
+          img.onerror = () => {
+            // 如果圖片載入失敗，顯示預設圖
+            imgElement.src = "/image/portrait.png";
+            resolve();
+          };
+          img.src = url;
+        });
+      }
+
+      // ----------------------------------------
+      // 🧠 主函式：取得作者資料
+      // ----------------------------------------
+      function GetData() {
+        if (isMockMode) {
+          console.log("📘 假資料模式啟動中 (AID=" + AID + ")");
+
+          if (AID === "0") {
+            // 🆕 新增作者模式：直接顯示 portrait.png
+            clearForm();
+            $("#AuthorProfilePic").attr("src", "/image/portrait.png").show(); // 直接顯示，不閃
+            return;
+          }
+
+          // ✏️ 編輯作者模式
+          var rw = mockAuthors.find((a) => a.AID === AID);
+          if (!rw) {
+            alert("⚠️ 找不到對應的假資料 AID=" + AID);
+            return;
+          }
+
+          fillFields(rw);
+        } else {
+          // ⚙️ 正常模式（連線伺服器）
+          $.post(
+            "/Authors/AuthorLib.aspx",
+            { Proc: "GetAuthorData", AID: AID },
+            function (data) {
+              var tb = $.parseJSON(data);
+              if (tb.length > 0) {
+                var rw = tb[0];
+                fillFields(rw);
+              }
+            }
+          );
+        }
+      }
+
+      // ----------------------------------------
+      // ✏️ 填入欄位內容（for 編輯作者）
+      // ----------------------------------------
+      function fillFields(rw) {
+        $(".fields").each(function () {
+          $(this).val(rw[this.id] || "");
+        });
+
+        // ✅ 改進：先預加載圖片，再設置 src
+        const profilePic = $("#AuthorProfilePic")[0];
+        if (rw.AuthorPhoto && rw.AuthorPhoto !== "") {
+          preloadImage(rw.AuthorPhoto, profilePic);
+        } else {
+          profilePic.src = "/image/portrait.png";
+        }
+
+        $(".htmlfields").each(function () {
+          const editor = tinymce.get(this.id);
+          if (editor) editor.setContent(rw[this.id] || "");
+        });
+      }
+
+      // ----------------------------------------
+      // 🪶 TinyMCE 初始化後執行 GetData()
+      // ----------------------------------------
+      $(document).ready(function () {
+        if (typeof tinymce !== "undefined") {
+          let editorInitCount = 0;
+          const totalEditors = $(".htmlfields").length;
+
+          tinymce.init({
+            selector: ".htmlfields",
+            height: 200,
+            menubar: false,
+            branding: false,
+            elementpath: false,
+            plugins: "lists link code",
+            toolbar:
+              "undo redo | bold italic underline | bullist numlist | link | code",
+            setup: function (editor) {
+              editor.on("init", function () {
+                editorInitCount++;
+                console.log(
+                  `🧠 ${editor.id} 初始化完成 (${editorInitCount}/${totalEditors})`
+                );
+
+                if (editorInitCount === totalEditors) {
+                  console.log(
+                    "✅ 所有 TinyMCE 編輯器初始化完成，開始載入資料..."
+                  );
+                  GetData();
+                }
+              });
+            },
+          });
+
+          // 取得網址參數
+          function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+          }
+
+          $(document).ready(function () {
+            const from = getQueryParam("from") || "list";
+            const BookUID = getQueryParam("BookUID") || "0";
+            const backBtn = document.querySelector(".BacktoListCss");
+
+            if (backBtn) {
+              if (from === "selection") {
+                backBtn.href = `AuthorSelection.html?UID=${BookUID}`;
+              } else {
+                backBtn.href = "PublishedAuthorCreateUpdateSearch.html";
+              }
+              if (!from && document.referrer.includes("AuthorSelection")) {
+                backBtn.href = document.referrer;
+              }
+            }
+          });
+        } else {
+          GetData();
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="app">
+      <div class="main">
+        <div class="MainTitleDesc TitleofThisPage">Author Information</div>
+        <a class="DelPubButtonCss" onclick="UpdateAuthorDelData();">Delete</a>
+        <a class="BacktoListCss">Go back</a>
+        <div class="container">
+          <div class="col-50">
+            <div class="row">
+              <div class="col-50">
+                <div class="row">
+                  <div class="col-40">
+                    <div class="AuthorPic">
+                      <div class="BookCoverDivCss">
+                        <label
+                          class="bookCoverUploadCSs"
+                          for="BookCoverOnChange"
+                        >
+                          <div class="upload-cover-wrapper">
+                            <img
+                              id="AuthorProfilePic"
+                              class="imgfields"
+                              alt="Author Photo Preview"
+                            />
+                            <span class="upload-text">Upload Author Photo</span>
+                          </div>
+                        </label>
+                        <input
+                          type="file"
+                          name="BookCoverOnChange"
+                          id="BookCoverOnChange"
+                          onchange="uploadImage(this);"
+                          style="display: none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-60">
+                    <label for="AuthorLastName"> Author Last Name</label>
+                    <input
+                      type="text"
+                      id="AuthorLastName"
+                      class="fields"
+                      name="AuthorLastName"
+                    />
+                    <label for="AuthorFirstName"> Author First Name</label>
+                    <input
+                      type="text"
+                      id="AuthorFirstName"
+                      class="fields"
+                      name="AuthorFirstName"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-50">
+                <label for="AuthorOriginalLanguageName">
+                  Author Original Language Name</label
+                >
+                <input
+                  type="text"
+                  id="AuthorOriginalLanguageName"
+                  class="fields"
+                  name="AuthorOriginalLanguageName"
+                />
+                <label for="AuthorRegionCountry"> Author's Country</label>
+                <select
+                  id="AuthorRegionCountry"
+                  class="fields"
+                  name="AuthorRegionCountry"
+                >
+                  <option value="">Select</option>
+                  <option value="China">China</option>
+                  <option value="France">France</option>
+                  <option value="Germany">Germany</option>
+                  <option value="Indonesia">Indonesia</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Japan">Japan</option>
+                  <option value="South Korea">South Korea</option>
+                  <option value="Spain">Spain</option>
+                  <option value="Taiwan">Taiwan</option>
+                  <option value="Turkey">Turkey</option>
+                  <option value="United States">United States</option>
+                  <option value="UK">UK</option>
+                </select>
+              </div>
+            </div>
+            <div class="TxtBoxCss">
+              <label for="AuthorDescription"> Author Description</label>
+              <textarea
+                id="AuthorDescription"
+                class="htmlfields"
+                name="AuthorDescription"
+                style="height: 200px"
+              ></textarea>
+            </div>
+          </div>
+          <div class="save-container">
+            <button class="SubmitBTN btn" onclick="UpdateData();">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        // 初始化載入
+        GetData();
+
+        // 捕捉所有帶 data-page 的連結
+        $(document).on("click", "a[data-page]", function (e) {
+          e.preventDefault();
+          const url = $(this).attr("href");
+
+          // 淡出目前內容
+          $("#app").fadeOut(150, function () {
+            // 載入新頁面的主要內容（只取 .main 裡的部分）
+            $("#app").load(url + " .main", function () {
+              $("#app").fadeIn(200);
+              console.log("✅ 已載入:", url);
+
+              // 如果新頁面也有自己的 JS 初始化，這裡再呼叫它
+              if (typeof GetData === "function") {
+                try {
+                  GetData(); // 嘗試呼叫頁面內的初始化函式
+                } catch (err) {
+                  console.warn("No GetData() found in", url);
+                }
+              }
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

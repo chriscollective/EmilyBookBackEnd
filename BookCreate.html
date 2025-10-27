@@ -1,0 +1,483 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638968058512341489"
+      type="text/javascript"
+    ></script>
+
+    <script src="/Scripts/ajaxfileupload.js" type="text/javascript"></script>
+    <script src="/Scripts/yearGenerator.js" type="text/javascript"></script>
+    <script
+      src="/Scripts/BehindTheScene/BookCreateJS/BookCoverUpload.js"
+      type="text/javascript"
+    ></script>
+
+    <script
+      src="/Scripts/BehindTheScene/BookCreateJS/BookDelUpdateJS.js"
+      type="text/javascript"
+    ></script>
+    <script
+      src="/Scripts/BehindTheScene/BookCreateJS/PublishDetermineJS.js"
+      type="text/javascript"
+    ></script>
+
+    <script
+      src="https://cdn.tiny.cloud/1/nco3yvd11i1byyx7mvhvcyqlrktst3i2r7o7qbjg4g8vaujm/tinymce/6/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+
+    <!--Book JS-->
+    <script type="text/javascript">
+      var UID = "0";
+      function GetData() {
+        $.post(
+          "/Books/BooksLib.aspx",
+          { Proc: "GetBookDataTiny", UID: UID },
+          function (data) {
+            var tb = $.parseJSON(data);
+            if (tb.length > 0) {
+              var rw = tb[0];
+
+              $(".fields").each(function () {
+                $(this).val(rw[this.id]);
+              });
+              $(".imgfields").each(function () {
+                $(this).attr("src", rw[this.id]);
+              });
+              $(".htmlfields").each(function () {
+                tinyMCE.get(this.id).setContent(rw[this.id]);
+              });
+
+              $.post(
+                "/Books/BooksLib.aspx",
+                { Proc: "GetGroupBookAuthorData", UID: UID },
+                function (data) {
+                  var tb = $.parseJSON(data);
+                  var htmlString = "";
+
+                  if (tb.length > 0) {
+                    //Multilpe Data
+                    for (var i = 0; i < tb.length; i++) {
+                      var rws = tb[i];
+                      htmlString +=
+                        ' <div class ="AuthorNameCss">' +
+                        rws.AuthorFirstName +
+                        " " +
+                        rws.AuthorLastName +
+                        "</div>" +
+                        '<hr class="AuthorHR">';
+                    }
+                    $("#BookAuthors").html(htmlString);
+                  }
+                }
+              );
+            }
+
+            $("#BookDescription").val(decodeURI(rw.BookDescription));
+            $("#BookMarketingRightsInformation").val(
+              decodeURI(rw.BookMarketingRightsInformation)
+            );
+            $("#BookReviews").val(decodeURI(rw.BookReviews));
+            $("#EmilyNotes").val(decodeURI(rw.EmilyNotes));
+          }
+        );
+      }
+
+      function InitPage() {
+        GetData();
+      }
+
+      function UpdateDataID(self) {
+        var obj1 = new Object();
+
+        alert("Check data");
+        obj1.AID = $(self).val();
+
+        alert(obj1.AID);
+
+        obj1.UID = UID;
+        alert(UID);
+
+        $.post(
+          "/Books/BooksLib.aspx",
+          { Proc: "UpdateBookDataID", jsonString: JSON.stringify(obj1) },
+          function (data) {
+            var obj1 = $.parseJSON(data);
+            alert(obj1.Message);
+            if (obj1.Success) {
+              if (UID == "0") {
+                UID = obj.UID.toString();
+              }
+
+              //window.location = "/BehindTheScene/FileCreateUpdate/FileCreateUpdateSearch.aspx";
+            } else {
+            }
+          }
+        );
+      }
+
+      function UpdateData() {
+        var obj = new Object();
+        $(".fields").each(function () {
+          obj[this.id] = $(this).val();
+        });
+        obj.BookDescription = encodeURI(
+          tinyMCE.get("BookDescription").getContent()
+        );
+        obj.BookMarketingRightsInformation = encodeURI(
+          tinyMCE.get("BookMarketingRightsInformation").getContent()
+        );
+        obj.BookReviews = encodeURI(tinyMCE.get("BookReviews").getContent());
+        obj.EmilyNotes = encodeURI(tinyMCE.get("EmilyNotes").getContent());
+
+        obj.UID = UID;
+        $.post(
+          "/Books/BooksLib.aspx",
+          { Proc: "UpdateBookData", jsonString: JSON.stringify(obj) },
+          function (data) {
+            var obj = $.parseJSON(data);
+            alert(obj.Message);
+            if (obj.Success) {
+              if (UID == "0") {
+                UID = obj.UID.toString();
+              }
+
+              //window.location = "/BehindTheScene/FileCreateUpdate/FileCreateUpdateSearch.aspx";
+            } else {
+            }
+          }
+        );
+      }
+
+      //            var obj = new Object();
+      //            var obj2 = new Object();
+
+      //            obj2.BookID = UID;
+      //            obj2.AuthorID = AID
+      //            obj.link.push(obj2);
+
+      function uploadImage(self) {
+        var $this = $(self);
+        if ($this.val() == "") {
+          alert("請選擇要上傳的檔案!!");
+          return;
+        }
+        var fileType = Array("jpg", "png", "gif", "PNG", "jpeg");
+        var filename = $this.val().split(".");
+        var extname = filename[filename.length - 1];
+
+        if (fileType.indexOf(extname) >= 0) {
+          MemberPhotoUpload();
+        } else {
+          alert("請上傳 jpg, png, gif 檔！");
+        }
+      }
+
+      function GetMemberPhoto() {
+        //  $.post("/Books/WBookLib.aspx",
+        //  { Proc: 'GetMemberPhoto' },
+        //  function (data) {
+        //  $("#MyPhoto").attr("src", data + "?type=" + new Date().getTime().toString());
+        //  });
+      }
+
+      //上傳檔案
+      function MemberPhotoUpload() {
+        // Waiting();
+        $.ajaxFileUpload({
+          url: "/Books/BooksLib.aspx",
+          type: "post",
+          data: { Proc: "MemberPhotoUpload", UID: UID },
+          secureuri: false,
+          fileElementId: "BookCoverOnChange", //上傳控件ID
+          dataType: "text", //返回值類型 一般設置 爲json
+          success: function (data, status) {
+            //$.unblockUI();
+            var obj = $.parseJSON(data);
+            alert(obj.Message);
+            $("#output").attr("src", obj.imgPath);
+            //GetMemberPhoto();
+            //  var image = document.getElementById('output');
+            //  image.src = URL.createObjectURL(event.target.files[0]);
+          },
+          error: function (data, status, e) {
+            //  $.unblockUI();
+            alert(e); //就是在這彈出“語法錯誤”
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="TitleofThisPage">Create / Edit Book Details</div>
+      <a class="DelPubButtonCss" onclick="UpdateBookDelData();">Delete</a>
+      <a class="DelPubButtonCss" onclick="UpdateBookUnPublishData();"
+        >UnPublish it</a
+      >
+      <a class="DelPubButtonCss" onclick="UpdateBookPublishData();"
+        >Publish it</a
+      >
+      <div class="MainTitleDesc">
+        Book Information
+        <a class="BacktoListCss" href="./index.html">Go back</a>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-50">
+            <div class="row">
+              <div class="col-30">
+                <div class="BookCoverDivCss">
+                  <label for="BookCoverOnChange" class="upload-cover-label">
+                    <div class="upload-cover-wrapper">
+                      <img
+                        id="BookCover"
+                        class="imgfields"
+                        src="./image/bookcover.png"
+                        alt="BookCover Preview"
+                      />
+                      <span class="upload-text">Upload Book Cover</span>
+                    </div>
+                  </label>
+
+                  <input
+                    type="file"
+                    name="BookCoverOnChange"
+                    id="BookCoverOnChange"
+                    onchange="uploadImage(this);"
+                    style="display: none"
+                  />
+                </div>
+              </div>
+              <div class="col-30">
+                <!--INPUT Book's Title-->
+                <label for="BookTitle"> Book Title</label>
+                <input
+                  type="text"
+                  id="BookTitle"
+                  class="fields"
+                  name="BookTitle"
+                />
+                <!--INPUT Book's Subtitle-->
+                <label for="BookSubtitle"> Book Subtitle</label>
+                <input
+                  type="text"
+                  id="BookSubtitle"
+                  class="fields"
+                  name="BookSubtitle"
+                />
+                <!--INPUT Book's Original Title-->
+                <label for="BookOriginalLanguageTitle">
+                  Original Language Title</label
+                >
+                <input
+                  type="text"
+                  id="BookOriginalLanguageTitle"
+                  class="fields"
+                  name="BookOriginalLanguageTitle"
+                />
+                <!--INPUT Book's Series-->
+                <label for="BookSeries"> Book Series</label>
+                <input
+                  type="text"
+                  id="BookSeries"
+                  class="fields"
+                  name="BookSeries"
+                />
+
+                <!--INPUT Book's Page Number-->
+                <label for="BookPageNumber"> Page Number</label>
+                <input
+                  type="text"
+                  id="BookPageNumber"
+                  class="fields"
+                  name="BookPageNumber"
+                />
+                <!--INPUT Book's Copyright's year-->
+                <label for="BookCopyRightYear"> Copyright Year</label>
+                <input
+                  type="text"
+                  id="BookCopyRightYear"
+                  class="fields"
+                  name="BookCopyRightYear"
+                />
+              </div>
+              <div class="col-40">
+                <!--INPUT ISBN of the Book-->
+                <label for="ISBNidentifier"> ISBN / Identifier</label>
+                <input
+                  type="text"
+                  id="ISBNidentifier"
+                  class="fields"
+                  name="ISBNidentifier"
+                  required
+                />
+                <!--INPUT Illustrator's Name-->
+                <label for="IllustratorName"> Illustrator Name</label>
+                <input
+                  type="text"
+                  id="IllustratorName"
+                  class="fields"
+                  name="IllustratorName"
+                />
+                <!--INPUT Publisher-->
+                <label for="Publisher"> Publisher</label>
+                <input
+                  type="text"
+                  id="Publisher"
+                  class="fields"
+                  name="Publisher"
+                />
+
+                <div class="row">
+                  <div class="col-50">
+                    <!--INPUT Book's Genre-->
+                    <label for="BookGenre"> Book Genre </label>
+                    <select
+                      class="fields GenreCSs"
+                      id="BookGenre"
+                      name="BookGenre"
+                    >
+                      <option value="">Select</option>
+                      <option value="Fiction">Fiction</option>
+                      <option value="Non-Fiction">Non-Fiction</option>
+                      <option value="Picture Books">Picture Books</option>
+                    </select>
+                    <!--INPUT Book's Original Language-->
+                    <label for="BookOriginalLanguage"> Original Language</label>
+                    <select
+                      id="BookOriginalLanguage"
+                      class="fields"
+                      name="BookOriginalLanguage"
+                    >
+                      <option value="">Select</option>
+                      <option value="Japanese">Japanese</option>
+                      <option value="Chinese">Chinese</option>
+                      <option value="Korean">Korean</option>
+                      <option value="English">English</option>
+                      <option value="German">German</option>
+                      <option value="French">French</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="Italian">Italian</option>
+                    </select>
+                  </div>
+                  <div class="col-50">
+                    <!--INNPUT Additional Book's Genre-->
+                    <label for="BookGenre2"> Other Genre</label>
+                    <input
+                      type="text"
+                      id="BookGenre2"
+                      class="fields"
+                      name="BookGenre2"
+                    />
+                    <!--INPUT Book's Format-->
+                    <label for="BookFormat">Binding Format</label>
+                    <select id="BookFormat" class="fields" name="BookFormat">
+                      <option value="">Select</option>
+                      <option value="Hardback">Hardback</option>
+                      <option value="Paperback">Paperback</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="TxtBoxCss">
+              <label for="BookDescription">Description of the Book</label>
+              <textarea
+                id="BookDescription"
+                class="htmlfields"
+                name="BookDescription"
+              ></textarea>
+
+              <label for="BookMarketingRightsInformation"
+                >Marketing Information</label
+              >
+              <textarea
+                id="BookMarketingRightsInformation"
+                class="htmlfields"
+                name="BookMarketingRightsInformation"
+                style="height: 200px"
+              ></textarea>
+
+              <label for="BookReviews">Reviews</label>
+              <textarea
+                id="BookReviews"
+                class="htmlfields"
+                name="BookReviews"
+                style="height: 200px"
+              ></textarea>
+
+              <label for="EmilyNotes">Endorsements</label>
+              <textarea
+                id="EmilyNotes"
+                class="htmlfields"
+                name="EmilyNotes"
+                style="height: 200px"
+              ></textarea>
+            </div>
+            <div class="save-container">
+              <button class="SubmitBTN btn" onclick="UpdateData();">
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./Scripts/shared/tinymce-init.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        initTiny();
+      });
+    </script>
+  </body>
+</html>

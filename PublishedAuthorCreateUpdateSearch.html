@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <!--font link-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+    <script
+      type="text/javascript"
+      src="Scripts/TopBottomBar/TopBar_JS.js"
+    ></script>
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638968244450784073"
+      type="text/javascript"
+    ></script>
+
+    <script type="text/javascript">
+      // --------------------------------------------------
+      // 🧭 模式切換：true = 假資料模式, false = 連線伺服器模式
+      // --------------------------------------------------
+      var isMockMode = true;
+
+      // --------------------------------------------------
+      // 🧩 假資料清單
+      // --------------------------------------------------
+      var mockAuthors = [
+        {
+          AID: "1",
+          AuthorFirstName: "Haruki",
+          AuthorLastName: "Murakami",
+          AuthorOriginalLanguageName: "村上春樹",
+          AuthorRegionCountry: "Japan",
+          AuthorDescription:
+            "<p>日本小說家，代表作《挪威的森林》、《1Q84》。</p>",
+          AuthorPhoto: "./Images/mock_author1.png",
+          Create_Who2: "Editor01",
+          Craete_When2: "2024/10/12 10:00:00",
+        },
+        {
+          AID: "2",
+          AuthorFirstName: "Alice",
+          AuthorLastName: "Walker",
+          AuthorOriginalLanguageName: "アリス・ウォーカー",
+          AuthorRegionCountry: "United States",
+          AuthorDescription: "<p>美國小說家，代表作《紫色姊妹花》。</p>",
+          AuthorPhoto: "./Images/mock_author2.png",
+          Create_Who2: "Admin",
+          Craete_When2: "2024/09/01 09:30:00",
+        },
+        {
+          AID: "3",
+          AuthorFirstName: "Kim",
+          AuthorLastName: "Young-ha",
+          AuthorOriginalLanguageName: "김연하",
+          AuthorRegionCountry: "South Korea",
+          AuthorDescription: "<p>韓國當代小說家，風格多變。</p>",
+          AuthorPhoto: "./Images/mock_author3.png",
+          Create_Who2: "Editor02",
+          Craete_When2: "2024/11/05 14:45:00",
+        },
+        {
+          AID: "4",
+          AuthorFirstName: "Françoise",
+          AuthorLastName: "Sagan",
+          AuthorOriginalLanguageName: "フランソワーズ・サガン",
+          AuthorRegionCountry: "France",
+          AuthorDescription:
+            "<p>法國小說家，代表作《你好，憂愁》（Bonjour Tristesse）。</p>",
+          AuthorPhoto: "./Images/mock_author4.png",
+          Create_Who2: "Staff",
+          Craete_When2: "2024/08/28 08:15:00",
+        },
+        {
+          AID: "5",
+          AuthorFirstName: "Li",
+          AuthorLastName: "Bai",
+          AuthorOriginalLanguageName: "李白",
+          AuthorRegionCountry: "China",
+          AuthorDescription:
+            "<p>唐代詩人，字太白，代表作《將進酒》、《早發白帝城》等。</p>",
+          AuthorPhoto: "./Images/mock_author5.png",
+          Create_Who2: "System",
+          Craete_When2: "2024/07/15 16:20:00",
+        },
+        {
+          AID: "1",
+          AuthorFirstName: "Haruki",
+          AuthorLastName: "Murakami",
+          AuthorOriginalLanguageName: "村上春樹",
+          AuthorRegionCountry: "Japan",
+          AuthorDescription:
+            "<p>日本小說家，代表作《挪威的森林》、《1Q84》。</p>",
+          AuthorPhoto: "./Images/mock_author1.png",
+          Create_Who2: "Editor01",
+          Craete_When2: "2024/10/12 10:00:00",
+        },
+        {
+          AID: "2",
+          AuthorFirstName: "Alice",
+          AuthorLastName: "Walker",
+          AuthorOriginalLanguageName: "アリス・ウォーカー",
+          AuthorRegionCountry: "United States",
+          AuthorDescription: "<p>美國小說家，代表作《紫色姊妹花》。</p>",
+          AuthorPhoto: "./Images/mock_author2.png",
+          Create_Who2: "Admin",
+          Craete_When2: "2024/09/01 09:30:00",
+        },
+        {
+          AID: "3",
+          AuthorFirstName: "Kim",
+          AuthorLastName: "Young-ha",
+          AuthorOriginalLanguageName: "김연하",
+          AuthorRegionCountry: "South Korea",
+          AuthorDescription: "<p>韓國當代小說家，風格多變。</p>",
+          AuthorPhoto: "./Images/mock_author3.png",
+          Create_Who2: "Editor02",
+          Craete_When2: "2024/11/05 14:45:00",
+        },
+        {
+          AID: "4",
+          AuthorFirstName: "Françoise",
+          AuthorLastName: "Sagan",
+          AuthorOriginalLanguageName: "フランソワーズ・サガン",
+          AuthorRegionCountry: "France",
+          AuthorDescription:
+            "<p>法國小說家，代表作《你好，憂愁》（Bonjour Tristesse）。</p>",
+          AuthorPhoto: "./Images/mock_author4.png",
+          Create_Who2: "Staff",
+          Craete_When2: "2024/08/28 08:15:00",
+        },
+        {
+          AID: "5",
+          AuthorFirstName: "Li",
+          AuthorLastName: "Bai",
+          AuthorOriginalLanguageName: "李白",
+          AuthorRegionCountry: "China",
+          AuthorDescription:
+            "<p>唐代詩人，字太白，代表作《將進酒》、《早發白帝城》等。</p>",
+          AuthorPhoto: "./Images/mock_author5.png",
+          Create_Who2: "System",
+          Craete_When2: "2024/07/15 16:20:00",
+        },
+        {
+          AID: "1",
+          AuthorFirstName: "Haruki",
+          AuthorLastName: "Murakami",
+          AuthorOriginalLanguageName: "村上春樹",
+          AuthorRegionCountry: "Japan",
+          AuthorDescription:
+            "<p>日本小說家，代表作《挪威的森林》、《1Q84》。</p>",
+          AuthorPhoto: "./Images/mock_author1.png",
+          Create_Who2: "Editor01",
+          Craete_When2: "2024/10/12 10:00:00",
+        },
+        {
+          AID: "2",
+          AuthorFirstName: "Alice",
+          AuthorLastName: "Walker",
+          AuthorOriginalLanguageName: "アリス・ウォーカー",
+          AuthorRegionCountry: "United States",
+          AuthorDescription: "<p>美國小說家，代表作《紫色姊妹花》。</p>",
+          AuthorPhoto: "./Images/mock_author2.png",
+          Create_Who2: "Admin",
+          Craete_When2: "2024/09/01 09:30:00",
+        },
+        {
+          AID: "3",
+          AuthorFirstName: "Kim",
+          AuthorLastName: "Young-ha",
+          AuthorOriginalLanguageName: "김연하",
+          AuthorRegionCountry: "South Korea",
+          AuthorDescription: "<p>韓國當代小說家，風格多變。</p>",
+          AuthorPhoto: "./Images/mock_author3.png",
+          Create_Who2: "Editor02",
+          Craete_When2: "2024/11/05 14:45:00",
+        },
+        {
+          AID: "4",
+          AuthorFirstName: "Françoise",
+          AuthorLastName: "Sagan",
+          AuthorOriginalLanguageName: "フランソワーズ・サガン",
+          AuthorRegionCountry: "France",
+          AuthorDescription:
+            "<p>法國小說家，代表作《你好，憂愁》（Bonjour Tristesse）。</p>",
+          AuthorPhoto: "./Images/mock_author4.png",
+          Create_Who2: "Staff",
+          Craete_When2: "2024/08/28 08:15:00",
+        },
+        {
+          AID: "5",
+          AuthorFirstName: "Li",
+          AuthorLastName: "Bai",
+          AuthorOriginalLanguageName: "李白",
+          AuthorRegionCountry: "China",
+          AuthorDescription:
+            "<p>唐代詩人，字太白，代表作《將進酒》、《早發白帝城》等。</p>",
+          AuthorPhoto: "./Images/mock_author5.png",
+          Create_Who2: "System",
+          Craete_When2: "2024/07/15 16:20:00",
+        },
+      ];
+
+      // --------------------------------------------------
+      // 🧠 主函式：取得作者資料
+      // --------------------------------------------------
+      function GetData() {
+        if (isMockMode) {
+          console.log("📘 假資料模式啟動中（Authors）");
+          renderAuthorTable(mockAuthors);
+        } else {
+          console.log("🌐 正常模式：從伺服器載入作者資料");
+          $.post(
+            "/Authors/AuthorLib.aspx",
+            { Proc: "GetAuthorEditDatas" },
+            function (data) {
+              var tb = $.parseJSON(data);
+              if (tb.length > 0) {
+                renderAuthorTable(tb);
+              } else {
+                $("#row").html("<tr><td colspan='4'>No data found.</td></tr>");
+              }
+            }
+          );
+        }
+      }
+
+      // --------------------------------------------------
+      // 🧩 渲染作者表格
+      // --------------------------------------------------
+      function renderAuthorTable(list) {
+        var htmlString = "";
+        for (var i = 0; i < list.length; i++) {
+          var rws = list[i];
+          htmlString +=
+            "<tr>" +
+            '<td class="co20"><a href="AuthorCreateUpdate.html?AID=' +
+            rws.AID +
+            '">' +
+            rws.AuthorFirstName +
+            " " +
+            rws.AuthorLastName +
+            "</a></td>" +
+            '<td class="co40"><a href="AuthorCreateUpdate.html?AID=' +
+            rws.AID +
+            '">' +
+            (rws.AuthorOriginalLanguageName || "") +
+            "</a></td>" +
+            '<td class="co20"><a href="AuthorCreateUpdate.html?AID=' +
+            rws.AID +
+            '">' +
+            (rws.AuthorRegionCountry || "") +
+            "</a></td>" +
+            '<td class="co15"><div>' +
+            (rws.Create_Who2 || "") +
+            "</div><div>" +
+            (rws.Craete_When2 || "") +
+            "</div></td>" +
+            "</tr>";
+        }
+        $("#row").html(htmlString);
+      }
+
+      // --------------------------------------------------
+      // 🔍 搜尋功能（不變）
+      // --------------------------------------------------
+      function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("userInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("row");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[2];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            tr[i].style.display =
+              txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+          }
+        }
+      }
+
+      // --------------------------------------------------
+      // 🚀 初始化
+      // --------------------------------------------------
+      $(document).ready(function () {
+        GetData();
+        // <!--用來判斷返回的是哪個頁面，要先告知是從哪來的-->>
+        const newBtn = document.querySelector(".CreateNewA");
+        if (newBtn) {
+          newBtn.href = "./AuthorCreateUpdate.html?from=list";
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="TitleofThisPage">Author Storage List</div>
+
+      <hr />
+
+      <input
+        type="text"
+        id="userInput"
+        onkeyup="myFunction();"
+        placeholder="Search by Entering Author Name.."
+        title="Type in a name"
+      />
+      <a class="CreateNewA" href="./AuthorCreateUpdate.html">Add New Author</a>
+
+      <table id="FilesToSort">
+        <tr class="header">
+          <!-- fille name -->
+          <th class="co20">Author Name</th>
+          <!-- file type -->
+          <th class="co40">Author Original Language Name</th>
+          <!-- file size -->
+          <th class="co20">Author Region Country</th>
+          <!-- Date file modified -->
+          <th class="co20">Published By</th>
+        </tr>
+      </table>
+
+      <table id="row">
+        <!-- File Categories -->
+      </table>
+
+      <!--<div id="row" class="row"></div>-->
+    </div>
+  </body>
+</html>

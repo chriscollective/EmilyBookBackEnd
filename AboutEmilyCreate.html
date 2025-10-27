@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+    <script
+      type="text/javascript"
+      src="Scripts/TopBottomBar/TopBar_JS.js"
+    ></script>
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638969830888862504"
+      type="text/javascript"
+    ></script>
+
+    <!--TINYMCE-->
+    <script
+      src="https://cdn.tiny.cloud/1/nco3yvd11i1byyx7mvhvcyqlrktst3i2r7o7qbjg4g8vaujm/tinymce/6/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+
+    <script src="/Scripts/ajaxfileupload.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      // --------------------------------------------------
+      // 🔄 模式切換：true = 假資料模式；false = 連線伺服器
+      // --------------------------------------------------
+      var isMockMode = true;
+
+      // --------------------------------------------------
+      // 🧠 主函式：取得資料
+      // --------------------------------------------------
+      function GetData() {
+        if (isMockMode) {
+          // 假資料模式
+          var rw = {
+            AboutEmilyName: "Emily Books Agency",
+            AboutEmilyDescription: `
+        <p>EMILY CHUANG is the founder of <b>EMILY BOOKS AGENCY</b> and <b>EMILY PUBLISHING COMPANY</b>.</p>
+
+        <p>She worked with international authors and published their collections such as Milan Kundera, J.M. Le Clézio, Umberto Eco, J.K. Rowling, Patrick Modiano, Patrick Süskind, Arnaldur Indriðason, Yann Martel, Bernhard Schlink, and Dai Sijie when she was the Deputy Editor in Chief at Crown Culture Corporation.</p>
+
+        <p>She was responsible for the “Soji Shimada Mystery Award” in 2009/2011 and invited publishers in Japan, China, Thailand, Malaysia, and Italy to publish the first prize books.</p>
+
+        <p>EMILY PUBLISHING successfully created some international bestsellers in Taiwan, such as <i>I am Malala</i>, <i>A Girl with Seven Names</i>, <i>The Rosie Project</i>, <i>La Vérité sur l’Affaire Harry Quebert</i>, <i>Anne Frank: The Graphic Diary</i>, and <i>Persepolis</i>.</p>
+
+        <p>She was invited to international book fairs and writer festivals such as Jerusalem, Guadalajara, Budapest, Sydney, Auckland, Paris, and Toronto.</p>
+
+        <p><b>Emily Publishing Company, Ltd.</b>, a book publisher representing Taiwan at the 2018 Gourmand World Cookbook Awards, won first prize in the translation category for its Chinese edition of the cookbook <i>Jerusalem</i>.</p>
+
+        <p><b>EMILY BOOKS AGENCY</b> is a Taiwan-based company founded in 2023. The agency mainly represents Asian books including fiction, non-fiction, graphic novels, and children’s picture books abroad.</p>
+      `,
+
+            AboutEmilyProfileImage: "./image/aboutEmily.jpg",
+          };
+
+          // 普通輸入欄位
+          $(".fields").each(function () {
+            $(this).val(rw[this.id] || "");
+          });
+
+          // 圖片欄位
+          $(".imgfields").each(function () {
+            $(this).attr("src", "./image/aboutEmily.jpg");
+          });
+
+          // TinyMCE 富文字欄位
+          $(".htmlfields").each(function () {
+            var editor = tinyMCE.get(this.id);
+            if (editor) {
+              editor.setContent(rw[this.id] || "");
+            } else {
+              console.warn("⚠️ 找不到 TinyMCE 編輯器:", this.id);
+            }
+          });
+        } else {
+          // --------------------------------------------------
+          // 🖥️ 正常模式（連線伺服器）
+          // --------------------------------------------------
+          $.post(
+            "/AboutEmily/EmilyInfoLib.aspx",
+            { Proc: "GetAboutEmilyData", UID: "1" },
+            function (data) {
+              var tb = $.parseJSON(data);
+              if (tb.length > 0) {
+                var rw = tb[0];
+
+                $(".fields").each(function () {
+                  $(this).val(rw[this.id] || "");
+                });
+
+                $(".imgfields").each(function () {
+                  $(this).attr("src", rw[this.id] || "./Images/no_image.png");
+                });
+
+                $(".htmlfields").each(function () {
+                  var editor = tinyMCE.get(this.id);
+                  if (editor) {
+                    editor.setContent(rw[this.id] || "");
+                  }
+                });
+              }
+            }
+          );
+        }
+      }
+      // --------------------------------------------------
+      // 🪶 TinyMCE 初始化完成後再載入資料
+      // --------------------------------------------------
+      $(document).ready(function () {
+        if (typeof tinymce !== "undefined") {
+          let editorInitCount = 0;
+          const totalEditors = $(".htmlfields").length;
+
+          tinymce.init({
+            selector: ".htmlfields",
+            height: 500,
+            menubar: false,
+            branding: false,
+            elementpath: false,
+            plugins: "lists link code",
+            toolbar:
+              "undo redo | bold italic underline | bullist numlist | link | code",
+            setup: function (editor) {
+              editor.on("init", function () {
+                editorInitCount++;
+                console.log(
+                  `🧠 ${editor.id} 初始化完成 (${editorInitCount}/${totalEditors})`
+                );
+
+                // ✨ 等全部編輯器都準備好，再載入資料
+                if (editorInitCount === totalEditors) {
+                  console.log(
+                    "✅ 所有 TinyMCE 編輯器初始化完成，開始載入假資料..."
+                  );
+                  GetData();
+                }
+              });
+            },
+          });
+        } else {
+          GetData();
+        }
+      });
+
+      function UpdateData() {
+        var obj = new Object();
+        $(".fields").each(function () {
+          obj[this.id] = $(this).val();
+        });
+        obj.UID = UID;
+        $.post(
+          "/AboutEmily/EmilyInfoLib.aspx",
+          { Proc: "UpdateAboutEmilyData", jsonString: JSON.stringify(obj) },
+          function (data) {
+            var obj = $.parseJSON(data);
+            alert(obj.Message);
+            if (obj.Success) {
+              if (UID == "0") {
+                UID = obj.UID.toString();
+              }
+
+              //window.location = "/BehindTheScene/FileCreateUpdate/FileCreateUpdateSearch.aspx";
+            } else {
+            }
+          }
+        );
+
+        /*------------------------------------------------------------
+            ----------------------------------------------------------*/
+      }
+
+      function uploadImage(self) {
+        var $this = $(self);
+        if ($this.val() == "") {
+          alert("請選擇要上傳的檔案!!");
+          return;
+        }
+        var fileType = Array("jpg", "png", "gif", "PNG");
+        var filename = $this.val().split(".");
+        var extname = filename[filename.length - 1];
+        if (fileType.indexOf(extname) >= 0) {
+          MemberPhotoUpload();
+        } else {
+          alert("請上傳 jpg, png, gif 檔！");
+        }
+      }
+      function GetMemberPhoto() {
+        //                    $.post("/Books/WBookLib.aspx",
+        //                        { Proc: 'GetMemberPhoto' },
+        //                            function (data) {
+        //                                $("#MyPhoto").attr("src", data + "?type=" + new Date().getTime().toString());
+        //                            });
+      }
+      //上傳檔案
+      function MemberPhotoUpload() {
+        // Waiting();
+        $.ajaxFileUpload({
+          url: "/AboutEmily/EmilyInfoLib.aspx",
+          type: "post",
+          data: { Proc: "MemberPhotoUpload", UID: UID },
+          secureuri: false,
+          fileElementId: "AboutEmilyProfileImage", //上傳控件ID
+          dataType: "text", //返回值類型 一般設置 爲json
+          success: function (data, status) {
+            //                            $.unblockUI();
+            var obj = $.parseJSON(data);
+            alert(obj.Message);
+            $("#output").attr("src", obj.imgPath);
+            //GetMemberPhoto();
+            //                            var image = document.getElementById('output');
+            //                            image.src = URL.createObjectURL(event.target.files[0]);
+          },
+          error: function (data, status, e) {
+            //  $.unblockUI();
+            alert(e); //就是在這彈出“語法錯誤”
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="ContentWrap">
+        <div class="MainTitleDesc TitleofThisPage">Edit About Emily Page</div>
+
+        <a class="BacktoListCss" href="./AboutEmilyCreateSearch.html"
+          >Go Back</a
+        >
+        <div class="row">
+          <div class="col-50">
+            <div class="container">
+              <div class="row">
+                <div class="col-25">
+                  <label>Edit About Emily Profile Image</label>
+                  <div class="BookCoverDivCss">
+                    <label
+                      for="AboutEmilyProfileImage"
+                      class="upload-cover-label"
+                    >
+                      <div class="upload-cover-wrapper">
+                        <img
+                          id="ProfileImage"
+                          class="imgfields"
+                          width="90%"
+                          style="max-height: 400px"
+                        />
+                        <span class="upload-text"
+                          >Upload Emily<br />Profile Image</span
+                        >
+                      </div>
+                    </label>
+                    <input
+                      type="file"
+                      name="image"
+                      id="AboutEmilyProfileImage"
+                      onchange="uploadImage(this);"
+                      style="display: none"
+                    />
+                  </div>
+                </div>
+                <div class="col-75">
+                  <label for="AboutEmilyName"> Edit About Emily name</label>
+                  <input
+                    type="text"
+                    id="AboutEmilyName"
+                    class="fields"
+                    name="AboutEmilyDescription"
+                  />
+                  <label for="AboutEmilyDescription">
+                    Edit ABout Emily Description</label
+                  >
+                  <textarea
+                    id="AboutEmilyDescription"
+                    class="fields htmlfields"
+                    name="AboutEmilyDescription"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="save-container">
+                <button class="SubmitBTN btn" onclick="UpdateData();">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

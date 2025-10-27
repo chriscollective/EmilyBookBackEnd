@@ -1,0 +1,521 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <!--font link-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638967685386830129"
+      type="text/javascript"
+    ></script>
+    <script type="text/javascript">
+      // 🔄 模式切換：true = 假資料模式；false = 正常連線模式
+      var isMockMode = true;
+      var UID = "";
+      var currentMode = "published"; // published / unpublished
+
+      // -----------------------------
+      // 🧩 模擬資料
+      // -----------------------------
+      var mockPublished = [
+        {
+          UID: "1",
+          BookOrder: "1",
+          BookTitle: "Mock Published Book A",
+          ISBNidentifier2: "978000000001",
+          PublishDecision_Who2: "Alice",
+          PublishDecision_When2: "2024/01/10 00:04:27",
+        },
+        {
+          UID: "2",
+          BookOrder: "2",
+          BookTitle: "Mock Published Book B",
+          ISBNidentifier2: "978000000002",
+          PublishDecision_Who2: "Bob",
+          PublishDecision_When2: "2024/02/14 10:48:06",
+        },
+        {
+          UID: "3",
+          BookOrder: "3",
+          BookTitle: "Mock Published Book C",
+          ISBNidentifier2: "978000000003",
+          PublishDecision_Who2: "Catherine",
+          PublishDecision_When2: "2024/03/05 00:05:45",
+        },
+        {
+          UID: "4",
+          BookOrder: "4",
+          BookTitle: "Mock Published Book D",
+          ISBNidentifier2: "978000000004",
+          PublishDecision_Who2: "Daniel",
+          PublishDecision_When2: "2024/04/20 10:49:28",
+        },
+        {
+          UID: "5",
+          BookOrder: "5",
+          BookTitle: "Mock Published Book E",
+          ISBNidentifier2: "978000000005",
+          PublishDecision_Who2: "Evelyn",
+          PublishDecision_When2: "2024/05/30 18:39:22",
+        },
+        {
+          UID: "1",
+          BookOrder: "1",
+          BookTitle: "Mock Published Book A",
+          ISBNidentifier2: "978000000001",
+          PublishDecision_Who2: "Alice",
+          PublishDecision_When2: "2024/01/10 00:04:27",
+        },
+        {
+          UID: "2",
+          BookOrder: "2",
+          BookTitle: "Mock Published Book B",
+          ISBNidentifier2: "978000000002",
+          PublishDecision_Who2: "Bob",
+          PublishDecision_When2: "2024/02/14 10:48:06",
+        },
+        {
+          UID: "3",
+          BookOrder: "3",
+          BookTitle: "Mock Published Book C",
+          ISBNidentifier2: "978000000003",
+          PublishDecision_Who2: "Catherine",
+          PublishDecision_When2: "2024/03/05 00:05:45",
+        },
+        {
+          UID: "4",
+          BookOrder: "4",
+          BookTitle: "Mock Published Book D",
+          ISBNidentifier2: "978000000004",
+          PublishDecision_Who2: "Daniel",
+          PublishDecision_When2: "2024/04/20 10:49:28",
+        },
+        {
+          UID: "5",
+          BookOrder: "5",
+          BookTitle: "Mock Published Book E",
+          ISBNidentifier2: "978000000005",
+          PublishDecision_Who2: "Evelyn",
+          PublishDecision_When2: "2024/05/30 18:39:22",
+        },
+        {
+          UID: "1",
+          BookOrder: "1",
+          BookTitle: "Mock Published Book A",
+          ISBNidentifier2: "978000000001",
+          PublishDecision_Who2: "Alice",
+          PublishDecision_When2: "2024/01/10 00:04:27",
+        },
+        {
+          UID: "2",
+          BookOrder: "2",
+          BookTitle: "Mock Published Book B",
+          ISBNidentifier2: "978000000002",
+          PublishDecision_Who2: "Bob",
+          PublishDecision_When2: "2024/02/14 10:48:06",
+        },
+        {
+          UID: "3",
+          BookOrder: "3",
+          BookTitle: "Mock Published Book C",
+          ISBNidentifier2: "978000000003",
+          PublishDecision_Who2: "Catherine",
+          PublishDecision_When2: "2024/03/05 00:05:45",
+        },
+        {
+          UID: "4",
+          BookOrder: "4",
+          BookTitle: "Mock Published Book D",
+          ISBNidentifier2: "978000000004",
+          PublishDecision_Who2: "Daniel",
+          PublishDecision_When2: "2024/04/20 10:49:28",
+        },
+        {
+          UID: "5",
+          BookOrder: "5",
+          BookTitle: "Mock Published Book E",
+          ISBNidentifier2: "978000000005",
+          PublishDecision_Who2: "Evelyn",
+          PublishDecision_When2: "2024/05/30 18:39:22",
+        },
+      ];
+
+      var mockUnPublished = [
+        {
+          UID: "101",
+          BookOrder: "1",
+          BookTitle: "Mock Unpublished Book X",
+          ISBNidentifier2: "978999999991",
+          PublishDecision_Who2: "EditorX",
+          PublishDecision_When2: "2025/05/01 06:23:47",
+        },
+        {
+          UID: "102",
+          BookOrder: "2",
+          BookTitle: "Mock Unpublished Book Y",
+          ISBNidentifier2: "978999999992",
+          PublishDecision_Who2: "EditorY",
+          PublishDecision_When2: "2025/06/01 16:44:16",
+        },
+        {
+          UID: "103",
+          BookOrder: "3",
+          BookTitle: "Mock Unpublished Book Z",
+          ISBNidentifier2: "978999999993",
+          PublishDecision_Who2: "EditorZ",
+          PublishDecision_When2: "2025/07/10 18:23:32",
+        },
+        {
+          UID: "104",
+          BookOrder: "4",
+          BookTitle: "Mock Unpublished Book K",
+          ISBNidentifier2: "978999999994",
+          PublishDecision_Who2: "Kevin",
+          PublishDecision_When2: "2025/08/12 11:45:22",
+        },
+        {
+          UID: "105",
+          BookOrder: "5",
+          BookTitle: "Mock Unpublished Book L",
+          ISBNidentifier2: "978999999995",
+          PublishDecision_Who2: "Lily",
+          PublishDecision_When2: "2025/09/18 08:32:12",
+        },
+        {
+          UID: "101",
+          BookOrder: "1",
+          BookTitle: "Mock Unpublished Book X",
+          ISBNidentifier2: "978999999991",
+          PublishDecision_Who2: "EditorX",
+          PublishDecision_When2: "2025/05/01 06:23:47",
+        },
+        {
+          UID: "102",
+          BookOrder: "2",
+          BookTitle: "Mock Unpublished Book Y",
+          ISBNidentifier2: "978999999992",
+          PublishDecision_Who2: "EditorY",
+          PublishDecision_When2: "2025/06/01 16:44:16",
+        },
+        {
+          UID: "103",
+          BookOrder: "3",
+          BookTitle: "Mock Unpublished Book Z",
+          ISBNidentifier2: "978999999993",
+          PublishDecision_Who2: "EditorZ",
+          PublishDecision_When2: "2025/07/10 18:23:32",
+        },
+        {
+          UID: "104",
+          BookOrder: "4",
+          BookTitle: "Mock Unpublished Book K",
+          ISBNidentifier2: "978999999994",
+          PublishDecision_Who2: "Kevin",
+          PublishDecision_When2: "2025/08/12 11:45:22",
+        },
+        {
+          UID: "105",
+          BookOrder: "5",
+          BookTitle: "Mock Unpublished Book L",
+          ISBNidentifier2: "978999999995",
+          PublishDecision_Who2: "Lily",
+          PublishDecision_When2: "2025/09/18 08:32:12",
+        },
+        {
+          UID: "101",
+          BookOrder: "1",
+          BookTitle: "Mock Unpublished Book X",
+          ISBNidentifier2: "978999999991",
+          PublishDecision_Who2: "EditorX",
+          PublishDecision_When2: "2025/05/01 06:23:47",
+        },
+        {
+          UID: "102",
+          BookOrder: "2",
+          BookTitle: "Mock Unpublished Book Y",
+          ISBNidentifier2: "978999999992",
+          PublishDecision_Who2: "EditorY",
+          PublishDecision_When2: "2025/06/01 16:44:16",
+        },
+        {
+          UID: "103",
+          BookOrder: "3",
+          BookTitle: "Mock Unpublished Book Z",
+          ISBNidentifier2: "978999999993",
+          PublishDecision_Who2: "EditorZ",
+          PublishDecision_When2: "2025/07/10 18:23:32",
+        },
+        {
+          UID: "104",
+          BookOrder: "4",
+          BookTitle: "Mock Unpublished Book K",
+          ISBNidentifier2: "978999999994",
+          PublishDecision_Who2: "Kevin",
+          PublishDecision_When2: "2025/08/12 11:45:22",
+        },
+        {
+          UID: "105",
+          BookOrder: "5",
+          BookTitle: "Mock Unpublished Book L",
+          ISBNidentifier2: "978999999995",
+          PublishDecision_Who2: "Lily",
+          PublishDecision_When2: "2025/09/18  08:32:12",
+        },
+      ];
+
+      // -----------------------------
+      // 🧱 建立表格內容
+      // -----------------------------
+      function renderTable(tb) {
+        var htmlString = "";
+        if (tb.length > 0) {
+          for (var i = 0; i < tb.length; i++) {
+            var rws = tb[i];
+            // 依模式決定連結目標
+            var editPage = isMockMode
+              ? "BookUpdate.html?UID=" + rws.UID.toString()
+              : "BookUpdate.aspx?UID=" + rws.UID.toString();
+
+            htmlString +=
+              "<tr>" +
+              '<td class="co20 select-css">' +
+              '<select id="BookOrder" name="BookOrder" UID="' +
+              rws.UID.toString() +
+              '" onChange="UpdateData(this);">' +
+              '<option value="1000"' +
+              (rws.BookOrder.toString() == "1000" ? "selected" : "") +
+              ">Select</option>";
+
+            for (var j = 1; j <= 13; j++) {
+              htmlString +=
+                '<option value="' +
+                j +
+                '"' +
+                (rws.BookOrder.toString() == j.toString() ? "selected" : "") +
+                ">" +
+                j +
+                "</option>";
+            }
+
+            htmlString +=
+              "</select>" +
+              "</td>" +
+              '<td class="co30">' +
+              '<a href="' +
+              editPage +
+              '">' +
+              rws.BookTitle +
+              "</a>" +
+              "</td>" +
+              '<td class="co20">' +
+              '<a href="' +
+              editPage +
+              '">' +
+              rws.ISBNidentifier2 +
+              "</a>" +
+              "</td>" +
+              '<td class="co20">' +
+              "<div>" +
+              rws.PublishDecision_Who2 +
+              "</div>" +
+              "<div>" +
+              rws.PublishDecision_When2 +
+              "</div>" +
+              "</td>" +
+              "</tr>";
+          }
+          $("#row").html(htmlString);
+        } else {
+          $("#row").html('<tr><td colspan="4">No data found</td></tr>');
+        }
+      }
+
+      // -----------------------------
+      // 📦 載入資料
+      // -----------------------------
+      function GetData() {
+        if (isMockMode) {
+          console.log("🧩 假資料模式啟動中:", currentMode);
+          if (currentMode === "published") {
+            renderTable(mockPublished);
+          } else {
+            renderTable(mockUnPublished);
+          }
+        } else {
+          var procName =
+            currentMode === "published"
+              ? "GetPublishedBookDatas"
+              : "GetUnPublishedBookDatas";
+
+          $.post("/Books/BooksLib.aspx", { Proc: procName }, function (data) {
+            var tb = $.parseJSON(data);
+            renderTable(tb);
+          });
+        }
+      }
+
+      // -----------------------------
+      // 🔁 切換 published/unpublished 模式
+      // -----------------------------
+      function switchMode(mode) {
+        currentMode = mode;
+
+        // 更新標題
+        $(".TitleofThisPage").text(
+          mode === "published"
+            ? "Published Book Storage List"
+            : "UnPublished Book Storage List"
+        );
+
+        // 切換按鈕樣式
+        $(".ChoiceTab").removeClass("active");
+        if (mode === "published") {
+          $(".ChoiceTab").eq(0).addClass("active");
+        } else {
+          $(".ChoiceTab").eq(1).addClass("active");
+        }
+
+        GetData();
+      }
+
+      // -----------------------------
+      // 🔍 搜尋功能
+      // -----------------------------
+      function myFunction() {
+        var input = document.getElementById("userInput");
+        var filter = input.value.toUpperCase();
+        var table = document.getElementById("row");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < tr.length; i++) {
+          var td = tr[i].getElementsByTagName("td")[2];
+          if (td) {
+            var txtValue = td.textContent || td.innerText;
+            tr[i].style.display =
+              txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+          }
+        }
+      }
+
+      // -----------------------------
+      // ✏️ 更新資料
+      // -----------------------------
+      function UpdateData(self) {
+        var obj = {
+          BookOrder: $(self).val(),
+          UID: $(self).attr("UID"),
+        };
+
+        if (isMockMode) {
+          console.log("🧩 模擬更新：", obj);
+          alert("Mock 更新成功！（實際未送出）");
+        } else {
+          $.post(
+            "/Books/BooksLib.aspx",
+            { Proc: "UpdateBookData2", jsonString: JSON.stringify(obj) },
+            function (data) {
+              var obj = $.parseJSON(data);
+              alert(obj.Message);
+              if (obj.Success && UID == "0") {
+                UID = obj.UID.toString();
+              }
+            }
+          );
+        }
+      }
+
+      // -----------------------------
+      // 🚀 頁面載入時
+      // -----------------------------
+      $(document).ready(function () {
+        GetData();
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="TitleofThisPage">Published Book Storage List</div>
+      <div class="center">
+        <div class="center">
+          <button class="ChoiceTab active" onclick="switchMode('published')">
+            Published Books
+          </button>
+          <button class="ChoiceTab" onclick="switchMode('unpublished')">
+            UnPublished Books
+          </button>
+        </div>
+      </div>
+      <hr />
+      <input
+        type="text"
+        id="userInput"
+        onkeyup="myFunction();"
+        placeholder="Search by Entering ISBN.."
+        title="Type in a name"
+      />
+      <a class="CreateNewA" href="./BookCreate.html"> Add New Book</a>
+      <table id="FilesToSort">
+        <tr class="header">
+          <th class="co20">Spolight Title</th>
+
+          <!-- fille name -->
+          <th class="co30">Book Title</th>
+
+          <!-- file size -->
+          <th class="co20">ISBN</th>
+          <!-- Date file modified -->
+          <th class="co20">Published By</th>
+        </tr>
+      </table>
+      <table id="row">
+        <!-- File Categories -->
+      </table>
+      <!--<div id="row" class="row"></div>-->
+    </div>
+  </body>
+</html>

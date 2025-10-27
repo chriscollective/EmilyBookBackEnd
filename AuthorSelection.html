@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638971096815173986"
+      type="text/javascript"
+    ></script>
+
+    <script src="/Scripts/ajaxfileupload.js" type="text/javascript"></script>
+    <script src="/Scripts/yearGenerator.js" type="text/javascript"></script>
+    <script
+      src="/Scripts/BehindTheScene/BookCreateJS/BookTextBoxTinyMceJS.js"
+      type="text/javascript"
+    ></script>
+    <!--Book JS-->
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        var isMockMode = true;
+        var UID = new URLSearchParams(window.location.search).get("UID") || "0";
+
+        const mockAuthors = [
+          {
+            AID: 1,
+            AuthorFirstName: "Alice",
+            AuthorLastName: "Sun",
+            Selected: true,
+          },
+          {
+            AID: 2,
+            AuthorFirstName: "Bob",
+            AuthorLastName: "Moon",
+            Selected: false,
+          },
+          {
+            AID: 3,
+            AuthorFirstName: "Catherine",
+            AuthorLastName: "Leaf",
+            Selected: false,
+          },
+          {
+            AID: 4,
+            AuthorFirstName: "Daniel",
+            AuthorLastName: "Wave",
+            Selected: false,
+          },
+          {
+            AID: 5,
+            AuthorFirstName: "Evelyn",
+            AuthorLastName: "Stone",
+            Selected: false,
+          },
+          {
+            AID: 6,
+            AuthorFirstName: "Frank",
+            AuthorLastName: "Star",
+            Selected: false,
+          },
+          {
+            AID: 7,
+            AuthorFirstName: "Grace",
+            AuthorLastName: "Moon",
+            Selected: false,
+          },
+          {
+            AID: 8,
+            AuthorFirstName: "Harry",
+            AuthorLastName: "Potter",
+            Selected: false,
+          },
+          {
+            AID: 9,
+            AuthorFirstName: "Ivy",
+            AuthorLastName: "Wind",
+            Selected: false,
+          },
+          {
+            AID: 10,
+            AuthorFirstName: "Jack",
+            AuthorLastName: "Heart",
+            Selected: false,
+          },
+        ];
+
+        // ---------- 顯示通知 ----------
+        // ✅ 修改後版本：顯示＋收回空間
+        function showNotification(message, type = "success") {
+          let bar = document.getElementById("notification-bar");
+          if (!bar) {
+            const input = document.getElementById("userInput");
+            if (!input) return;
+            bar = document.createElement("div");
+            bar.id = "notification-bar";
+            input.insertAdjacentElement("afterend", bar);
+          }
+
+          // 確保可見並重置動畫
+          bar.style.display = "block";
+          bar.textContent = message;
+          bar.className = type;
+          bar.style.opacity = "0";
+          bar.style.transform = "translateY(-8px)";
+          bar.style.transition = "none";
+          bar.offsetHeight; // reflow
+          bar.style.transition = "all 0.4s ease";
+          bar.style.opacity = "1";
+          bar.style.transform = "translateY(0)";
+
+          // 🔁 每次重啟計時器
+          clearTimeout(bar._timer);
+          bar._timer = setTimeout(() => {
+            bar.style.opacity = "0";
+            bar.style.transform = "translateY(-8px)";
+            // 💡 淡出結束後收回空間
+            setTimeout(() => {
+              bar.style.display = "none";
+            }, 400); // 對應 transition 時間
+          }, 1800);
+        }
+
+        // ---------- 產生作者清單 ----------
+        function renderAuthorList(tb) {
+          let html = "";
+          tb.forEach((rws) => {
+            html += `
+          <tr>
+            <td class="co20" style="padding-left:10px;">
+              <input type="checkbox" class="checkbox-css" name="AID"
+                value="${rws.AID}" ${rws.Selected ? "checked" : ""}
+                onclick="UpdateDataID(this)">
+            </td>
+            <td class="co80">
+              <div class="AuthorNameCss">${rws.AuthorFirstName} ${
+              rws.AuthorLastName
+            }</div>
+            </td>
+          </tr>`;
+          });
+          $("#AuthorList").html(html);
+        }
+
+        // ---------- 初始化資料 ----------
+        function GetData() {
+          if (isMockMode) {
+            const saved =
+              JSON.parse(localStorage.getItem("selectedAuthors_" + UID)) || [];
+            mockAuthors.forEach(
+              (a) => (a.Selected = !!saved.find((sa) => sa.AID === a.AID))
+            );
+            renderAuthorList(mockAuthors);
+          }
+        }
+
+        // ---------- 勾選事件 ----------
+        window.UpdateDataID = function (self) {
+          const AID = $(self).val();
+          const isAdd = self.checked;
+          let selected =
+            JSON.parse(localStorage.getItem("selectedAuthors_" + UID)) || [];
+
+          if (isAdd) {
+            const author = mockAuthors.find((a) => a.AID == AID);
+            if (author && !selected.find((a) => a.AID == AID))
+              selected.push(author);
+            showNotification("Author has been changed!", "success");
+          } else {
+            selected = selected.filter((a) => a.AID != AID);
+            showNotification("Author has been removed!", "warning");
+          }
+
+          localStorage.setItem(
+            "selectedAuthors_" + UID,
+            JSON.stringify(selected)
+          );
+        };
+
+        // ---------- 完成編輯檢查 ----------
+        const finishBtn = document.getElementById("finishEditBtn");
+        if (finishBtn) {
+          finishBtn.addEventListener("click", function (e) {
+            const selected =
+              JSON.parse(localStorage.getItem("selectedAuthors_" + UID)) || [];
+            if (selected.length === 0) {
+              e.preventDefault();
+              showNotification("Author cannot be empty!", "error");
+            } else {
+              window.location.href = `./BookUpdate.html?UID=${UID}`;
+            }
+          });
+        }
+
+        // ---------- 初始化執行 ----------
+        GetData();
+        const newBtn = document.querySelector(".CreateNewA");
+        if (newBtn) {
+          // 這裡 UID 是書本 ID，前面你的程式已經定義 var UID
+          newBtn.href = `./AuthorCreateUpdate.html?from=selection&BookUID=${UID}`;
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="TitleofThisPage">List of Authors</div>
+      <div class="authorBtnContainer">
+        <a
+          class="CreateNewAuthorA CreateNewA btn"
+          href="./AuthorCreateUpdate.html?UID=0"
+          >Create New Author</a
+        >
+
+        <a class="FinishedEditingA btn" id="finishEditBtn"
+          >Finished Editing Author(s)</a
+        >
+      </div>
+
+      <hr />
+      <input
+        type="text"
+        id="userInput"
+        onkeyup="myFunction();"
+        placeholder="Search by Entering Author's Name.."
+        title="Type in a name"
+      />
+      <table id="FilesToSort">
+        <tr class="header">
+          <th class="co20">CheckBox</th>
+
+          <!-- fille name -->
+          <th class="co80">Author Name</th>
+        </tr>
+      </table>
+      <table id="AuthorList">
+        <!-- File Categories -->
+      </table>
+    </div>
+  </body>
+</html>

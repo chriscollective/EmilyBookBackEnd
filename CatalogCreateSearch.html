@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638968244905212871"
+      type="text/javascript"
+    ></script>
+
+    <script type="text/javascript">
+      // --------------------------------------------------
+      // 🔄 模式切換：true = 假資料模式；false = 連線伺服器
+      // --------------------------------------------------
+      var isMockMode = true;
+
+      // --------------------------------------------------
+      // 🧩 假資料庫：五筆 Catalog
+      // --------------------------------------------------
+      const mockCatalogs = [
+        {
+          UID: "1",
+          CatalogName: "Spring 2025 Fiction",
+          CatalogYear: "2025",
+          Create_Who2: "Emily Chen",
+          Craete_When2: "2025/03/15 10:00:00",
+        },
+        {
+          UID: "2",
+          CatalogName: "Children’s Picture Books",
+          CatalogYear: "2024",
+          Create_Who2: "Michael Wang",
+          Craete_When2: "2024/11/02 09:30:00",
+        },
+        {
+          UID: "3",
+          CatalogName: "Global Non-Fiction",
+          CatalogYear: "2023",
+          Create_Who2: "Lisa Huang",
+          Craete_When2: "2023/09/18 14:45:37",
+        },
+        {
+          UID: "4",
+          CatalogName: "Asian Literary Highlights",
+          CatalogYear: "2025",
+          Create_Who2: "Kenji Arai",
+          Craete_When2: "2025/01/20 08:15:00",
+        },
+        {
+          UID: "5",
+          CatalogName: "Award-Winning Titles",
+          CatalogYear: "2022",
+          Create_Who2: "Sophia Lin",
+          Craete_When2: "2022/12/10 16:30:00",
+        },
+        {
+          UID: "1",
+          CatalogName: "Spring 2025 Fiction",
+          CatalogYear: "2025",
+          Create_Who2: "Emily Chen",
+          Craete_When2: "2025/03/15 10:00:00",
+        },
+        {
+          UID: "2",
+          CatalogName: "Children’s Picture Books",
+          CatalogYear: "2024",
+          Create_Who2: "Michael Wang",
+          Craete_When2: "2024/11/02 09:30:00",
+        },
+        {
+          UID: "3",
+          CatalogName: "Global Non-Fiction",
+          CatalogYear: "2023",
+          Create_Who2: "Lisa Huang",
+          Craete_When2: "2023/09/18 14:45:37",
+        },
+        {
+          UID: "4",
+          CatalogName: "Asian Literary Highlights",
+          CatalogYear: "2025",
+          Create_Who2: "Kenji Arai",
+          Craete_When2: "2025/01/20 08:15:00",
+        },
+        {
+          UID: "5",
+          CatalogName: "Award-Winning Titles",
+          CatalogYear: "2022",
+          Create_Who2: "Sophia Lin",
+          Craete_When2: "2022/12/10 16:30:00",
+        },
+        {
+          UID: "1",
+          CatalogName: "Spring 2025 Fiction",
+          CatalogYear: "2025",
+          Create_Who2: "Emily Chen",
+          Craete_When2: "2025/03/15 10:00:00",
+        },
+        {
+          UID: "2",
+          CatalogName: "Children’s Picture Books",
+          CatalogYear: "2024",
+          Create_Who2: "Michael Wang",
+          Craete_When2: "2024/11/02 09:30:00",
+        },
+        {
+          UID: "3",
+          CatalogName: "Global Non-Fiction",
+          CatalogYear: "2023",
+          Create_Who2: "Lisa Huang",
+          Craete_When2: "2023/09/18 14:45:37",
+        },
+        {
+          UID: "4",
+          CatalogName: "Asian Literary Highlights",
+          CatalogYear: "2025",
+          Create_Who2: "Kenji Arai",
+          Craete_When2: "2025/01/20 08:15:00",
+        },
+        {
+          UID: "5",
+          CatalogName: "Award-Winning Titles",
+          CatalogYear: "2022",
+          Create_Who2: "Sophia Lin",
+          Craete_When2: "2022/12/10 16:30:00",
+        },
+      ];
+
+      // --------------------------------------------------
+      // 🧠 主函式：取得資料
+      // --------------------------------------------------
+      function GetData() {
+        if (isMockMode) {
+          console.log("🧩 假資料模式啟動中：CatalogCreateSearch");
+          renderTable(mockCatalogs);
+          return;
+        }
+
+        // 🚀 真實伺服器模式
+        $.post(
+          "/Catalogs/CatalogLib.aspx",
+          { Proc: "GetCatalogDatas" },
+          function (data) {
+            var tb = $.parseJSON(data);
+            renderTable(tb);
+          }
+        );
+      }
+
+      // --------------------------------------------------
+      // 🧱 建立表格內容
+      // --------------------------------------------------
+      function renderTable(tb) {
+        var htmlString = "";
+        if (tb.length > 0) {
+          for (var i = 0; i < tb.length; i++) {
+            var rws = tb[i];
+            htmlString +=
+              "<tr>" +
+              '<td class="co30">' +
+              '<a href="CatalogCreate.html?UID=' +
+              rws.UID +
+              '">' +
+              rws.CatalogName +
+              "</a>" +
+              "</td>" +
+              '<td class="co30">' +
+              '<a href="CatalogCreate.html?UID=' +
+              rws.UID +
+              '">' +
+              rws.CatalogYear +
+              "</a>" +
+              "</td>" +
+              '<td class="co40">' +
+              "<div>" +
+              rws.Create_Who2 +
+              "</div>" +
+              "<div>" +
+              rws.Craete_When2 +
+              "</div>" +
+              "</td>" +
+              "</tr>";
+          }
+          $("#row").html(htmlString);
+        } else {
+          $("#row").html('<tr><td colspan="3">No data found</td></tr>');
+        }
+      }
+
+      // --------------------------------------------------
+      // 🔍 搜尋功能（保留原本）
+      // --------------------------------------------------
+      function myFunction() {
+        var input = document.getElementById("userInput");
+        var filter = input.value.toUpperCase();
+        var table = document.getElementById("row");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < tr.length; i++) {
+          var td = tr[i].getElementsByTagName("td")[0];
+          if (td) {
+            var txtValue = td.textContent || td.innerText;
+            tr[i].style.display =
+              txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+          }
+        }
+      }
+
+      // --------------------------------------------------
+      // 🚀 初始化
+      // --------------------------------------------------
+      $(document).ready(function () {
+        GetData();
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="TitleofThisPage">Catalog Storage List</div>
+
+      <hr />
+
+      <input
+        type="text"
+        id="userInput"
+        onkeyup="myFunction();"
+        placeholder="Search by Entering Catalog Name.."
+        title="Type in a name"
+      />
+      <a class="CreateNewA" href="./CatalogCreate.html?UID=0"
+        >Add New Catalog</a
+      >
+
+      <table id="FilesToSort">
+        <tr class="header">
+          <!-- fille name -->
+          <th class="co30">Catalog Name</th>
+          <!-- file type -->
+          <th class="co30">Year</th>
+
+          <!-- Date file modified -->
+          <th class="co40">Date Modified</th>
+        </tr>
+      </table>
+
+      <table id="row">
+        <!-- File Categories -->
+      </table>
+
+      <!--<div id="row" class="row"></div>-->
+    </div>
+  </body>
+</html>

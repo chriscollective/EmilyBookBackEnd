@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <script type="text/javascript">
+      // --------------------------------------------------
+      // 🔄 模式切換：true = 假資料模式；false = 正常連線
+      // --------------------------------------------------
+      var isMockMode = true;
+
+      // --------------------------------------------------
+      // 🧭 從網址抓 UID
+      // --------------------------------------------------
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+      var UID = getQueryParam("UID") || "0";
+
+      // --------------------------------------------------
+      // 🧩 假資料庫
+      // --------------------------------------------------
+      const mockCatalogs = [
+        {
+          UID: "1",
+          CatalogName: "Spring 2025 Fiction",
+          CatalogYear: "2025",
+          Create_Who2: "Emily Chen",
+          Craete_When2: "2025/03/15",
+        },
+        {
+          UID: "2",
+          CatalogName: "Children’s Picture Books",
+          CatalogYear: "2024",
+          Create_Who2: "Michael Wang",
+          Craete_When2: "2024/11/02",
+        },
+        {
+          UID: "3",
+          CatalogName: "Global Non-Fiction",
+          CatalogYear: "2023",
+          Create_Who2: "Lisa Huang",
+          Craete_When2: "2023/09/18",
+        },
+        {
+          UID: "4",
+          CatalogName: "Asian Literary Highlights",
+          CatalogYear: "2025",
+          Create_Who2: "Kenji Arai",
+          Craete_When2: "2025/01/20",
+        },
+        {
+          UID: "5",
+          CatalogName: "Award-Winning Titles",
+          CatalogYear: "2022",
+          Create_Who2: "Sophia Lin",
+          Craete_When2: "2022/12/10",
+        },
+      ];
+
+      // --------------------------------------------------
+      // 🧠 主函式：載入資料
+      // --------------------------------------------------
+      function GetData() {
+        if (isMockMode) {
+          console.log("🧩 假資料模式啟動中 (UID=" + UID + ")");
+          if (UID === "0") {
+            $(".TitleofThisPage").text("Create New Catalog");
+            $("#CatalogName").val("");
+            $("#CatalogYear").val("");
+            return;
+          }
+
+          const rw = mockCatalogs.find((c) => c.UID === UID);
+          if (rw) {
+            $("#CatalogName").val(rw.CatalogName);
+            $("#CatalogYear").val(rw.CatalogYear);
+            $(".TitleofThisPage").text("Edit Catalog");
+          } else {
+            alert("未找到對應的假資料 UID=" + UID);
+          }
+          return;
+        }
+
+        // 🚀 真實連線模式
+        $.post(
+          "/Catalogs/CatalogLib.aspx",
+          { Proc: "GetCatalogData", UID: UID },
+          function (data) {
+            var tb = $.parseJSON(data);
+            if (tb.length > 0) {
+              var rw = tb[0];
+              $("#CatalogName").val(rw.CatalogName);
+              $("#CatalogYear").val(rw.CatalogYear);
+            }
+          }
+        );
+      }
+
+      // --------------------------------------------------
+      // ✏️ 更新資料
+      // --------------------------------------------------
+      function UpdateData() {
+        var obj = {};
+        $(".fields").each(function () {
+          obj[this.id] = $(this).val();
+        });
+        obj.UID = UID;
+
+        if (isMockMode) {
+          console.log("🧩 模擬更新：", obj);
+          alert(
+            UID === "0"
+              ? "📘 模擬新增成功！(未送出伺服器)"
+              : "✏️ 模擬修改成功！(未送出伺服器)"
+          );
+          return;
+        }
+
+        $.post(
+          "/Catalogs/CatalogLib.aspx",
+          { Proc: "UpdateCatalogData", jsonString: JSON.stringify(obj) },
+          function (data) {
+            var obj = $.parseJSON(data);
+            alert(obj.Message);
+            if (obj.Success && UID == "0") {
+              UID = obj.UID.toString();
+            }
+          }
+        );
+      }
+
+      // --------------------------------------------------
+      // 🗑️ 刪除資料
+      // --------------------------------------------------
+      function UpdateCatalogDelData() {
+        if (isMockMode) {
+          if (confirm("確定要刪除這筆假資料嗎？")) {
+            alert("🗑️ 模擬刪除成功！（假資料模式不會真的刪除）");
+            window.location.href = "./CatalogCreateSearch.html";
+          }
+          return;
+        }
+
+        if (confirm("Are you sure you want to delete?")) {
+          $.post(
+            "/Catalogs/CatalogLib.aspx",
+            { Proc: "UpdateCatalogDeleteData", UID: UID },
+            function (data) {
+              var obj = $.parseJSON(data);
+              alert(obj.Message);
+              if (obj.Success) {
+                window.location = "./CatalogCreateSearch.html";
+              }
+            }
+          );
+        }
+      }
+
+      // --------------------------------------------------
+      // 🚀 初始化
+      // --------------------------------------------------
+      $(document).ready(function () {
+        GetData();
+      });
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="MainTitleDesc TitleofThisPage">Catalog Information</div>
+
+      <a onclick="UpdateCatalogDelData();" class="DelPubButtonCss">Delete</a>
+      <a class="BacktoListCss" href="./CatalogCreateSearch.html">Go back</a>
+
+      <div class="row">
+        <div class="col-50">
+          <div class="container">
+            <div class="row">
+              <div class="col-50">
+                <label for="CatalogName"> Catalog Name</label>
+                <input
+                  type="text"
+                  id="CatalogName"
+                  class="fields"
+                  name="CatalogName"
+                />
+
+                <label for="CatalogYear"> Catalog Year</label>
+                <input
+                  type="text"
+                  id="CatalogYear"
+                  class="fields"
+                  name="CatalogYear"
+                />
+              </div>
+            </div>
+
+            <div class="save-container">
+              <button class="SubmitBTN btn" onclick="UpdateData();">
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

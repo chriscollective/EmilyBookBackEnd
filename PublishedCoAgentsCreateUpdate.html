@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:fb="http://www.facebook.com/2008/fbml"
+>
+  <head>
+    <title>Emily Books Agency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="/Images/Index_images/favicon.png"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/Scripts/blockUI.js" type="text/javascript"></script>
+
+    <!--font link-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./NewCss/base.css" />
+    <link rel="stylesheet" href="./NewCss/layout.css" />
+    <link rel="stylesheet" href="./NewCss/modules.css" />
+
+    <!-- JavaScript Link -->
+
+    <script
+      src="https://cdn.tiny.cloud/1/nco3yvd11i1byyx7mvhvcyqlrktst3i2r7o7qbjg4g8vaujm/tinymce/6/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+
+    <script
+      src="/Scripts/LoginPage/Logout.js?t=638968244650152423"
+      type="text/javascript"
+    ></script>
+
+    <script type="text/javascript">
+      function GetData() {
+        $.post(
+          "/CoAgents/CoAgentsLib.aspx",
+          { Proc: "GetCoAgentsDatas" },
+          function (data) {
+            var tb = $.parseJSON(data);
+            var htmlString = "";
+
+            if (tb.length > 0) {
+              //Multilpe Data
+              for (var i = 0; i < tb.length; i++) {
+                var rws = tb[i];
+                htmlString +=
+                  "<tr>" +
+                  '<td  class="co40">' +
+                  '<a href="CoAgentsCreateUpdate.aspx?CoAgentsID=' +
+                  rws.CoAgentsID.toString() +
+                  '">' +
+                  rws.AgencyName +
+                  "</a>" +
+                  "</td>" +
+                  '<td  class="co40">' +
+                  '<a href="CoAgentsCreateUpdate.aspx?CoAgentsID=' +
+                  rws.CoAgentsID.toString() +
+                  '">' +
+                  rws.AgentFirstName +
+                  " " +
+                  rws.AgentLastName +
+                  "</a>" +
+                  "</td>" +
+                  '<td  class="co20">' +
+                  "<div>" +
+                  rws.Create_Who2 +
+                  "</div>" +
+                  "<div>" +
+                  rws.Create_When2 +
+                  "</div>" +
+                  "</td>" +
+                  "</tr>";
+              }
+              $("#row").html(htmlString);
+            }
+          }
+        );
+      }
+
+      $(document).ready(function () {
+        GetData();
+      });
+
+      //Function to searh for the items
+      function myFunction() {
+        //Setting the variables
+        var input, filter, table, tr, td, i, txtValue;
+        //Getting user's input
+        input = document.getElementById("userInput");
+
+        //make all the value to upper case for easy search
+        filter = input.value.toUpperCase();
+        //getting the filename from the bale
+        table = document.getElementById("row");
+        tr = table.getElementsByTagName("tr");
+        //Go through all the file name to match the user input
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[2];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              //If nothing matches, display nothing
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="topnav">
+      <div class="AccountInfoCss">
+        Welcome <span id="FullName">Bruce</span>
+        <button class="LogOutButtonCss" onclick="logout()">Log Out</button>
+      </div>
+
+      <div class="navbar">
+        <div class="LogoWrap">
+          <a href="/index.aspx">
+            <img src="../image/EmilyAgencyLogo.png" class="Site_Title_Logo" />
+          </a>
+        </div>
+        <div class="PageNav_Wrap">
+          <a href="./index.html">Book List</a>
+          <a href="./PublishedAuthorCreateUpdateSearch.html">Author List</a>
+          <a href="./PublishedCoAgentsCreateUpdate.html">CoAgents List</a>
+          <a href="./CatalogCreateSearch.html">Catalog List</a>
+          <a href="./AboutEmilyCreateSearch.html">Emily Info Edit</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="TitleofThisPage">CoAgents Storage List</div>
+
+      <hr />
+
+      <input
+        type="text"
+        id="userInput"
+        onkeyup="myFunction();"
+        placeholder="Search by Entering Agency's Name.."
+        title="Type in a name"
+      />
+      <a class="CreateNewA" href="./CoAgentsCreateUpdate.html"
+        >Add New CoAgent</a
+      >
+
+      <table id="FilesToSort">
+        <tr class="header">
+          <!-- fille name -->
+          <th class="co40">Agency Name</th>
+          <!-- file type -->
+          <th class="co40">CoAgent's Name</th>
+          <!-- Date file modified -->
+          <th class="co20">Published By</th>
+        </tr>
+      </table>
+
+      <table id="row">
+        <!-- File Categories -->
+      </table>
+
+      <!--<div id="row" class="row"></div>-->
+    </div>
+    <script src="./Scripts/shared/tinymce-init.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        initTiny();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,315 @@
+/* ========== modules.css ========== */
+
+/* 📑 表格（搜尋結果頁面共用） */
+.table-list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+  border-radius: 10px;
+}
+.table-list th,
+.table-list td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eae1d5;
+}
+.table-list tr:hover {
+  background-color: #fff4ea;
+}
+
+/* ✨ TinyMCE 區塊統一化 */
+.tox {
+  border-radius: 10px !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+/*搜尋框 */
+#userInput {
+  background-color: #ffffff;
+  width: 90%;
+  margin: 30px auto;
+  display: block;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1.5px solid #b7b7a4; /* 灰綠框線 */
+  outline: none;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+#userInput:focus {
+  border-color: #c84b31; /* 聚焦時主色紅 */
+  box-shadow: 0 0 6px #f1d2c0;
+}
+
+/* 書籍建立頁面專屬樣式 =============================== */
+
+.BookCoverDivCss {
+  text-align: center;
+  background: #fffaf7;
+  border: 3px dashed #e4d9d9;
+  border-radius: 12px;
+  padding: 2px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 封面 + 字樣外層 */
+.upload-cover-label {
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* 包裝區域，方便做 hover 動畫 */
+.upload-cover-wrapper {
+  display: inline-block;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* 封面圖片預覽 */
+.upload-cover-wrapper img {
+  width: 90%;
+  max-height: 300px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.35s ease, box-shadow 0.3s ease;
+}
+
+/* hover 時圖片放大、陰影加深 */
+.upload-cover-wrapper:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* label 上的字 */
+.upload-text {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #be210c;
+  transition: color 0.3s ease;
+}
+
+/* hover 同步變色 */
+.upload-cover-wrapper:hover .upload-text {
+  color: darkcyan;
+}
+
+/* 可加特效：hover 時整個區域微微上浮 */
+.upload-cover-wrapper:hover {
+  transform: translateY(-2px);
+}
+
+.bookCoverUploadCSs {
+  color: #be210c;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.TxtBoxCss {
+  margin-top: 40px;
+  background: #fffefc;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 封面圖片縮圖大小控制 */
+.BookCoverDivCss img {
+  max-height: 300px;
+  margin-top: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* TinyMCE 區塊外觀一致化 */
+.tox-tinymce {
+  border-radius: 10px !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+/* Delete / Publish / Unpublish 按鈕 */
+.DelPubButtonCss {
+  color: #be210c;
+  font-weight: 800;
+
+  padding: 8px 12px;
+  transition: all 0.25s ease;
+}
+.DelPubButtonCss:hover {
+  color: darkcyan;
+  cursor: pointer;
+  transform: translateY(-2px);
+}
+
+/* 返回列表按鈕 */
+.BacktoListCss {
+  float: right;
+  margin: 20px;
+  padding: 10px 18px;
+  font-size: 18px;
+  color: #fffaf5;
+  background: #be210c;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: none;
+}
+.BacktoListCss:hover {
+  color: #3c3c3c;
+  background: #f6d6b8; /* 柔米橘 hover */
+  transform: translateY(-2px);
+}
+
+/*publish and unpublish*/
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ChoiceTab {
+  display: inline-block;
+  padding: 12px 22px;
+  margin: 6px;
+  border-radius: 10px;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+
+  background-color: #f3f1eb;
+  border: 1px solid #d6d0c4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.ChoiceTab:hover {
+  background-color: #f6d6b8;
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 新增按鈕 */
+.CreateNewA {
+  margin: 20px;
+  padding: 10px 18px;
+  font-size: 18px;
+  color: #fffaf5;
+  background: #be210c;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.CreateNewA:hover {
+  color: #3c3c3c;
+  background: #f6d6b8; /* 柔米橘 hover */
+  transform: translateY(-2px);
+}
+
+/*save button*/
+.SubmitBTN {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.AuthorNameCss {
+  padding: 0 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+}
+
+/* About Emily =============================== */
+.editInfo {
+  display: flex;
+  float: right;
+  width: 80px;
+}
+
+.ImgDivCss {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.EmilyBookImageCss {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.AboutEmilyDescriptionCss {
+  padding-left: 50px;
+  font-family: "Libre Caslon Text", "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.8;
+  color: #3c3c3c;
+  letter-spacing: 0.3px;
+}
+
+.AboutEmilyDescriptionCss p {
+  text-indent: 2em; /* 段落縮排 */
+  margin-bottom: 1.5em;
+}
+
+/*Adding Author*/
+
+.authorBtnContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.CreateNewAuthorA,
+.FinishedEditingA {
+  margin: 0;
+}
+
+/*Author Selection*/
+
+#notification-bar {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: all 0.4s ease;
+  margin: 10px auto;
+  padding: 12px 20px;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 12px;
+  text-align: center;
+  color: #3c4a3e; /* 墨綠灰主色 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+#notification-bar.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+#notification-bar.success {
+  background: linear-gradient(
+    180deg,
+    rgba(248, 243, 235, 0.8) 0%,
+    rgba(241, 230, 220, 0.9) 100%
+  );
+}
+#notification-bar.warning {
+  background: linear-gradient(
+    180deg,
+    rgba(248, 243, 235, 0.8) 0%,
+    rgba(241, 230, 220, 0.9) 100%
+  );
+}
+#notification-bar.error {
+  background-color: #de483ee3;
+}

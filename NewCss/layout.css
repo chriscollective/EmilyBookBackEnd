@@ -49,7 +49,6 @@
   padding: 10px 15px;
   margin: 0 2px;
   border-radius: 6px;
-  transition: all 0.3s ease;
   font-size: 1.5rem;
 }
 .PageNav_Wrap a:hover {
@@ -310,8 +309,6 @@ select#BookOrder {
 
   .PageNav_Wrap a:hover {
     color: #c84b31; /* 暖紅字 */
-    background: linear-gradient(180deg, #f9eae1 0%, #f6d6b8 100%);
-    border-radius: 50%;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
     transition: none;
   }
